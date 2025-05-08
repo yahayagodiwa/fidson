@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./db/connectDB');
 const User = require('./models/User');
 const authRoutes = require('./routes/handler');
+const adminRoutes = require('./routes/adminHandler');
 dotenv.config();
 const cors = require('cors');
 
@@ -21,6 +22,7 @@ app.use(cors({
 }));
 
 app.use("/", authRoutes);
+app.use("/admin", adminRoutes);
 
 
 

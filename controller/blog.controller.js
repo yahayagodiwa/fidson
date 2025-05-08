@@ -3,9 +3,9 @@ const User = require('../models/User');
 
 const createPost = async (req, res)=>{
     try {
-        const {title, content, email } = req.body;
+        const {title, content } = req.body;
 
-        if (!title || !content || !email) {
+        if (!title || !content) {
             return res.status(400).json({ message: "All fields are required" });
         }
         if (title.length < 5) {
@@ -14,29 +14,19 @@ const createPost = async (req, res)=>{
         if (content.length < 10) {
             return res.status(400).json({ message: "Content must be at least 10 characters long" });
         }
-        if (!/\S+@\S+\.\S+/.test(email)) {
-            return res.status(400).json({ message: "Email is not valid" });
-        }
-        
-        // Check if user exists
-        const existingUser = await User.findOne({
-            email
-        })
-
-        if (!existingUser) {
-            return res.status(400).json({ message: "User does not exist" });
-        }
 
         // Create new blog post
         const newPost = new Blog({
             title,
             content,
         })
-        newPost.author = existingUser._id; // Set the author to the user's ID
+        newPost.author = req.user._id; // Set the author to the logged-in user
 
         await newPost.save();
-        existingUser.posts.push(newPost._id); // Add the post ID to the user's posts array
-        await existingUser.save(); // Save the user with the updated posts array
+        // Add the post to the author's posts array
+        const author = await User.findById(req.user._id);
+        author.posts.push(newPost._id);
+        await author.save();
 
         return res.status(201).json({ message: "Blog post created successfully", post: newPost });
         

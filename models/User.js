@@ -24,6 +24,31 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    role:{
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user',
+    },
+    isActive:{
+        type: Boolean,
+        default: true,
+    },
+    isBlocked:{
+        type: Boolean,
+        default: false,
+    },
+    isVerified:{
+        type: Boolean,
+        default: false,
+    },
+    resetToken:{
+        type: String,
+        default: null,
+    },
+    resetTokenExpiry:{
+        type: Date,
+        default: null,
+    },
 })
 
 const User = mongoose.model('User', userSchema);

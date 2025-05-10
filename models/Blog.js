@@ -20,6 +20,10 @@ const blogSchema = new Schema({
         default: Date.now,
     },
 
+    image: {
+        type: String,
+        default: null,
+    },
 })
 
 const Blog = mongoose.model('Blog', blogSchema);

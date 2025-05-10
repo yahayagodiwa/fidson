@@ -97,10 +97,15 @@ const getPosts = async (req, res) => {
 const getPostById = async (req, res) => {
     try {
         const { id } = req.params;
+
+        if(id.length < 24){
+            return res.status(400).json({ message: "Invalid post ID" });
+        }
         const post = await Blog.findById(id).populate('author', 'name email'); // Populate author field with user details
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
+       
         res.status(200).json(post);
     } catch (error) {
         console.error("Error fetching blog post:", error);

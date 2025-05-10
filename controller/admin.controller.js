@@ -30,6 +30,10 @@ const deletePostByAdmin = async (req, res) => {
 
     try {
         const { postId } = req.params;
+
+        if(postId.length < 24) {
+            return res.status(401).json({message: "Invalid post id"})
+        }
         if (!postId) {
             return res.status(400).json({ message: "Post ID is required" });
         }

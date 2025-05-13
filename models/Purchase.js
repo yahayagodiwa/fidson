@@ -2,6 +2,7 @@ const mongoose  = require('mongoose')
 
 const purchaseSchema = new mongoose.Schema({
 userEmail: { type: String, required: true },
+phone: { type: String, required: true },
   product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
   total: Number,
   status: { type: String, default: 'paid' },

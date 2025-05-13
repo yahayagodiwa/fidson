@@ -111,9 +111,9 @@ const getProductByName = async (req, res) => {
 
 const purchaseProduct = async (req, res) => {
   try {
-    const { reference, productId, email } = req.body;
+    const { reference, productId, email, phone } = req.body;
 
-    if (!reference || !productId || !email) {
+    if (!reference || !productId || !email || !phone ) {
       return res.status(400).json({ error: "All fields are required!" });
     }
 
@@ -145,6 +145,7 @@ const purchaseProduct = async (req, res) => {
     // Create purchase record
     const purchase = await Purchase.create({
       userEmail: email,
+      phone,
       product: productId,
       total: amount,
       status: 'paid',

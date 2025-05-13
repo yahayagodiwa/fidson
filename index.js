@@ -5,6 +5,7 @@ const connectDB = require('./db/connectDB');
 const User = require('./models/User');
 const authRoutes = require('./routes/handler');
 const adminRoutes = require('./routes/adminHandler');
+const productRoutes = require('./routes/productHandler');
 dotenv.config();
 const cors = require('cors');
 
@@ -23,6 +24,7 @@ app.use(cors({
 
 app.use("/", authRoutes);
 app.use("/admin", adminRoutes);
+app.use("/api/product", productRoutes);
 
 
 

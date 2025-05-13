@@ -87,7 +87,7 @@ const createProduct = async (req, res)=>{
 
 const getProducts = async (req, res) => {
     try {
-        const product = await Product.find() 
+        const product = await Product.find().sort({ createdAt: -1 }) 
         res.status(200).json(product);
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
@@ -163,7 +163,7 @@ const purchaseProduct = async (req, res) => {
 
 const getAllPurchase = async (req, res) => {
     try {
-      const purchases = await Purchase.find().populate('product'); // Optional: populate product info
+      const purchases = await Purchase.find().populate('product').sort({ createdAt: -1 }); // Optional: populate product info
       return res.status(200).json({
         message: "Purchases fetched successfully",
         count: purchases.length,

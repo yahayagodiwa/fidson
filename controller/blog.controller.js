@@ -86,7 +86,7 @@ const createPost = async (req, res)=>{
 
 const getPosts = async (req, res) => {
     try {
-        const posts = await Blog.find().populate('author', 'name email'); // Populate author field with user details
+        const posts = await Blog.find().populate('author', 'name email').sort({ createdAt: -1 }); // Populate author field with user details
         res.status(200).json(posts);
     } catch (error) {
         console.error("Error fetching blog posts:", error);

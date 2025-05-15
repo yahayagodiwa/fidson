@@ -10,10 +10,11 @@ const router = express.Router();
 
 
 router.get("/", getProducts);
-router.post("/create", upload.single('image'), authMiddleware, createProduct);
+router.post("/create", upload.single('image'), [authMiddleware, isAdmin], createProduct);
 router.get("/:name", getProductByName);
 router.post('/purchase', purchaseProduct)
 router.get('/purchase/all-purchase', getAllPurchase)
+router.get('/single-product/:name', getProductByName)
 router.get('/purchase/single-purchase/:reference', getSinglePurchase)
 
 module.exports = router;

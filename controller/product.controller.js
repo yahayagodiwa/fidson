@@ -61,7 +61,7 @@ const createProduct = async (req, res)=>{
         
        
 
-        // Create new blog post
+       
         const newProduct = new Product({
             name,
             description,
@@ -73,8 +73,7 @@ const createProduct = async (req, res)=>{
         
 
         await newProduct.save();
-        // Add the post to the author's Product array
-
+        
         return res.status(201).json({ message: "Product created successfully", product: newProduct });
         
         

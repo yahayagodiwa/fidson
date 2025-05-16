@@ -16,7 +16,7 @@ router.get("/api/posts", getPosts);
 router.post("/api/post", upload.single('image'), [authMiddleware, isAdmin], createPost);
 router.get("/api/user/:email", authMiddleware, getUser);
 router.get("/api/post/:id", getPostById);
-router.patch("/api/edit-profile", authMiddleware, editUserProfile);
+router.patch("/api/edit-profile", [authMiddleware, isAdmin], editUserProfile);
 router.post("/api/forget-password",  forgotPassword);
 router.post("/api/reset-password/:token", resetPassword);
 router.get("/api/verify-email/:id", verifyEmail)

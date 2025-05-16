@@ -7,6 +7,9 @@ dotenv.config();
 const cloudinary = require('../utils/cloudinary');
 const Purchase = require('../models/Purchase');
 
+
+//////--------------------------------- Create Product -------------------------------//////////////////
+
 const createProduct = async (req, res)=>{
     try {
         const {name, description, price, spec} = req.body;
@@ -83,6 +86,8 @@ const createProduct = async (req, res)=>{
     }
 }
 
+//////--------------------------------- Get All Product -------------------------------//////////////////
+
 
 const getProducts = async (req, res) => {
     try {
@@ -107,6 +112,8 @@ const getProductByName = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
+//////--------------------------------- Purchase Product -------------------------------//////////////////
 
 const purchaseProduct = async (req, res) => {
   try {
@@ -159,6 +166,8 @@ const purchaseProduct = async (req, res) => {
   }
 };
 
+//////--------------------------------- Get all purchased Product -------------------------------//////////////////
+
 
 const getAllPurchase = async (req, res) => {
     try {
@@ -174,6 +183,7 @@ const getAllPurchase = async (req, res) => {
     }
   };
   
+//////--------------------------------- Get single purchased Product -------------------------------//////////////////
 
   const getSinglePurchase = async (req, res) => {
     try {
@@ -197,6 +207,40 @@ const getAllPurchase = async (req, res) => {
     }
   };
   
+//////--------------------------------- Edit Product -------------------------------//////////////////
+
+const editProducts = async (req, res)=>{
+  try {
+    const {id} = req.params
+  const product = await Product.findById(id)
+  if(!product) return res.status(404).json({error: "Product not found"})
+  
+  const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {new: true, runValidators: true})
+  return res.status(200).json({message: "Product updated Successfully", updatedProduct})
+  } catch (error) {
+    return res.status(500).json({ error: "Server error", details: error.message });
+  }
+  
+}
+
+//////--------------------------------- Delete Product -------------------------------//////////////////
+const deleteProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    await Product.findByIdAndDelete(id);
+
+    return res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: "Server error", details: error.message });
+  }
+};
+
 
 module.exports = {
     createProduct,
@@ -204,6 +248,8 @@ module.exports = {
     getProductByName,
     getAllPurchase,
     purchaseProduct,
-    getSinglePurchase
+    getSinglePurchase,
+    editProducts,
+    deleteProducts
 
 }

@@ -113,8 +113,44 @@ const getPostById = async (req, res) => {
     }
 }
 
+//////--------------------------------- Edit Post -------------------------------//////////////////
+
+const editPosts = async (req, res)=>{
+  try {
+    const {id} = req.params
+  const post = await Blog.findById(id)
+  if(!post) return res.status(404).json({error: "Post not found"})
+  
+  const updatedPost = await Blog.findByIdAndUpdate(id, req.body, {new: true, runValidators: true})
+  return res.status(200).json({message: "Post updated Successfully", updatedPost})
+  } catch (error) {
+    return res.status(500).json({ error: "Server error", details: error.message });
+  }
+  
+}
+
+//////--------------------------------- Delete Post -------------------------------//////////////////
+const deletePosts = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Blog.findById(id);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    await Blog.findByIdAndDelete(id);
+
+    return res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: "Server error", details: error.message });
+  }
+};
+
 module.exports = {
     createPost,
     getPosts,
     getPostById,
+    editPosts,
+    deletePosts
 }

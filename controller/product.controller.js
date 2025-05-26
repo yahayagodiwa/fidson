@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const cloudinary = require('../utils/cloudinary');
 const Purchase = require('../models/Purchase');
+const { default: Redis } = require('ioredis');
 
 
 //////--------------------------------- Create Product -------------------------------//////////////////
@@ -91,7 +92,14 @@ const createProduct = async (req, res)=>{
 
 const getProducts = async (req, res) => {
     try {
+
+      const cachedProducts = await Redis.get('products');
+      if (cachedProducts) {
+        return res.status(200).json(JSON.parse(cachedProducts));
+      }
         const product = await Product.find().sort({ createdAt: -1 }) 
+        
+        await Redis.set('products', JSON.stringify(product), 'EX', 3600);
         res.status(200).json(product);
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
@@ -216,6 +224,7 @@ const editProducts = async (req, res)=>{
   if(!product) return res.status(404).json({error: "Product not found"})
   
   const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {new: true, runValidators: true})
+  await Redis.del('products'); // Clear cache after update
   return res.status(200).json({message: "Product updated Successfully", updatedProduct})
   } catch (error) {
     return res.status(500).json({ error: "Server error", details: error.message });
@@ -234,7 +243,7 @@ const deleteProducts = async (req, res) => {
     }
 
     await Product.findByIdAndDelete(id);
-
+    await Redis.del('products'); // Clear cache after deletion
     return res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
     return res.status(500).json({ error: "Server error", details: error.message });
